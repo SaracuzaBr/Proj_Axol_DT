@@ -4,12 +4,12 @@ services:
   # Banco de Dados PostgreSQL
   db:
     image: postgres:15
-    container_name: axol_db_container
+    container_name: nexus_db_container
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password123}
-      POSTGRES_DB: ${POSTGRES_DB:-axol_db}
+      POSTGRES_DB: ${POSTGRES_DB:-nexus_db}
     ports:
       - "5432:5432"
     volumes:
@@ -18,11 +18,11 @@ services:
   # Interface Visual para o Banco (PgAdmin)
   pgadmin:
     image: dpage/pgadmin4
-    container_name: axol_pgadmin_container
+    container_name: nexus_pgadmin_container
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@axol.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-axol123}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@nexus.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
     ports:
       - "8080:80"
     depends_on:

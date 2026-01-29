@@ -16,3 +16,24 @@ def health_check():
         "timestamp": models.datetime.utcnow(),
         "database": "connected"
     }
+
+from pydantic import BaseModel
+
+# Esquema para validar os dados que chegam do simulador
+class SensorData(BaseModel):
+    machine_id: str
+    temperature: float
+    vibration: float
+
+@app.post("/readings")
+def receive_reading(data: SensorData, db: Session = Depends(get_db)):
+    # Criando o registro no banco de dados
+    new_reading = models.SensorReading(
+        machine_id=data.machine_id,
+        temperature=data.temperature,
+        vibration=data.vibration
+    )
+    db.add(new_reading)
+    db.commit()
+    db.refresh(new_reading)
+    return {"message": "Dado recebido com sucesso!", "id": new_reading.id}

@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from database import engine, get_db
 import models
+from fastapi.middleware.cors import CORSMiddleware # Importe isso
 
 # Cria as tabelas no banco de dados se elas não existirem
 models.Base.metadata.create_all(bind=engine)
@@ -37,3 +38,19 @@ def receive_reading(data: SensorData, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_reading)
     return {"message": "Dado recebido com sucesso!", "id": new_reading.id}
+
+# 1. Configuração de CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # Em produção, use o endereço do seu React
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# 2. Rota para retornar as últimas 10 leituras
+@app.get("/readings")
+def get_readings(db: Session = Depends(get_db)):
+    # Busca as 10 leituras mais recentes, ordenadas por ID decrescente
+    readings = db.query(models.SensorReading).order_by(models.SensorReading.id.desc()).limit(10).all()
+    return readings

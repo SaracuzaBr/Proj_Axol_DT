@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # URL de conexão: usuario:senha@host:porta/nome_do_banco
-SQLALCHEMY_DATABASE_URL = "postgresql://admin:password123@localhost:5432/axol_db"
+SQLALCHEMY_DATABASE_URL = "postgresql://admin:password123@localhost:5432/nexus_db"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

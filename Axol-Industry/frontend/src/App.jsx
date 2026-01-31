@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, AppBar, Toolbar, Box, Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@mui/material';
 import axios from 'axios';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 function App() {
   const [readings, setReadings] = useState([]);
@@ -21,12 +22,28 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  const chartData = [...readings].reverse();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static"><Toolbar><Typography variant="h6">Nexus Industry</Typography></Toolbar></AppBar>
       <Container sx={{ mt: 4 }}>
         <Typography variant="h4" gutterBottom>Monitoramento em Tempo Real</Typography>
         <Paper elevation={3}>
+          
+          <Paper elevation={3} sx={{ p: 2, mb: 4, height: 300 }}>
+            <Typography variant="h6" gutterBottom>Tendência de Temperatura (°C)</Typography>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="id" hide /> {/* Usamos o ID como tempo simplificado por enquanto */}
+                <YAxis domain={[0, 100]} />
+                <Tooltip />
+                <Line type="monotone" dataKey="temperature" stroke="#8884d8" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </Paper>
+
           <Table>
             <TableHead>
               <TableRow>
